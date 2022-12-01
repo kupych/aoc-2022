@@ -26,3 +26,5 @@ aoc_2020-*.tar
 /files/*
 
 .tool-versions
+
+/target/
