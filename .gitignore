@@ -1,4 +1,6 @@
 /target
+/files/*
+/_build/*
 
 
 # Added by cargo
