@@ -10,51 +10,57 @@ defmodule Aoc.Day2 do
   def day(), do: 2
 
   @impl Day
-  def a(instructions) do
-    instructions
-    |> Enum.reduce([0, 0], &parse_instruction/2)
-    |> Enum.product()
+  def a(guide) do
+    guide
+    |> Enum.map(&score/1)
+    |> Enum.sum()
   end
 
   @impl Day
-  def b(instructions) do
-    instructions
-    |> Enum.reduce([0, 0, 0], &parse_instruction/2)
-    |> tl()
-    |> Enum.product()
+  def b(guide) do
+    guide
+    |> Enum.map(&score_b/1)
+    |> Enum.sum()
   end
 
   @impl Day
   def parse_input() do
     with {:ok, file} <- Day.load(__MODULE__) do
       file
-      |> String.split(~r/\s/, trim: true)
-      |> Enum.chunk_every(2)
-      |> Enum.map(fn [command, value] -> {command, String.to_integer(value)} end)
+      |> String.split("\n", trim: true)
     end
   end
 
-  defp parse_instruction({"forward", value}, [x, y]) do
-    [x + value, y]
+  def score(<<you, _, me>>) do
+    do_score(you - 64, me - 87)
   end
 
-  defp parse_instruction({"up", value}, [x, y]) do
-    [x, y - value]
+  def score_b(<<you, _, me>>) do
+    me =
+      case me do
+        ?X -> (you - 62) |> valid_rps
+        ?Y -> you - 64
+        ?Z -> (you - 63) |> valid_rps
+      end
+
+    IO.inspect(me)
+
+    do_score(you - 64, me)
   end
 
-  defp parse_instruction({"down", value}, [x, y]) do
-    [x, y + value]
+  defp do_score(you, you) do
+    you + 3
   end
 
-  defp parse_instruction({"forward", value}, [aim, x, y]) do
-    [aim, x + value, y + value * aim]
+  defp do_score(you, me) do
+    case me - you do
+      1 -> me + 6
+      -2 -> me + 6
+      _ -> me
+    end
   end
 
-  defp parse_instruction({"up", value}, [aim, x, y]) do
-    [aim - value, x, y]
-  end
-
-  defp parse_instruction({"down", value}, [aim, x, y]) do
-    [aim + value, x, y]
+  defp valid_rps(selection) do
+    Stream.cycle([1, 2, 3]) |> Enum.at(selection - 1)
   end
 end
