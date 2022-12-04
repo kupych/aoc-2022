@@ -4,7 +4,7 @@ defmodule Aoc.Day3 do
   """
   @behaviour Aoc.Day
 
-  alias Aoc.{Day, Utilities}
+  alias Aoc.Day
 
   @impl Day
   def day(), do: 3

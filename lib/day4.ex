@@ -3,9 +3,8 @@ defmodule Aoc.Day4 do
   Solutions for Day 4.
   """
   @behaviour Aoc.Day
-
-  alias Aoc.{Bingo, Day}
-  alias Aoc.Bingo.Card
+   
+  alias Aoc.Day
 
   @impl Day
   def day(), do: 4
