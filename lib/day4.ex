@@ -3,7 +3,7 @@ defmodule Aoc.Day4 do
   Solutions for Day 4.
   """
   @behaviour Aoc.Day
-   
+
   alias Aoc.Day
 
   @impl Day
