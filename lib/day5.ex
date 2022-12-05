@@ -101,17 +101,4 @@ defmodule Aoc.Day5 do
     |> Map.put(from_index, from_col)
     |> Map.put(to_index, to_col)
   end
-
-  def run_step_b([move_count, from_index, to_index], boxes) do
-    from_col = Map.get(boxes, from_index)
-    to_col = Map.get(boxes, to_index)
-
-    {boxes_to_move, from_col} = Enum.split(from_col, move_count)
-
-    to_col = Enum.concat(boxes_to_move, to_col)
-
-    boxes
-    |> Map.put(from_index, from_col)
-    |> Map.put(to_index, to_col)
-  end
 end
