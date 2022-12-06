@@ -32,6 +32,15 @@ defmodule Aoc.Day do
   def load(module), do: File.read("files/#{module.day}")
 
   @doc """
+  Returns a list of all possible modules
+  """
+  def modules do
+    1..25
+    |> Enum.map(&"Elixir.Aoc.Day#{&1}")
+    |> Enum.map(&String.to_existing_atom/1)
+  end
+
+  @doc """
   Returns the solution for parts A and B of the problem.
 
   ## Examples
@@ -44,4 +53,14 @@ defmodule Aoc.Day do
     IO.puts("The solution to #{module.day()}a is: #{module.a(data)}")
     IO.puts("The solution to #{module.day()}b is: #{module.b(data)}")
   end
+
+  @doc """
+  Returns the solution for all days, if input files exist.
+  """
+  def solve() do
+    modules()
+    |> Enum.filter(&File.exists?("files/#{apply(&1, :day, [])}"))
+    |> Enum.each(&solve/1)
+  end
+
 end

@@ -43,8 +43,6 @@ defmodule Aoc.Day2 do
         ?Z -> (you - 63) |> valid_rps
       end
 
-    IO.inspect(me)
-
     do_score(you - 64, me)
   end
 
