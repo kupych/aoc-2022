@@ -62,5 +62,4 @@ defmodule Aoc.Day do
     |> Enum.filter(&File.exists?("files/#{apply(&1, :day, [])}"))
     |> Enum.each(&solve/1)
   end
-
 end
