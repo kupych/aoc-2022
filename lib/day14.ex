@@ -12,46 +12,27 @@ defmodule Aoc.Day14 do
 
   @impl Day
   def a(map) do
-    {_.._, _..max_y} =
-      map
-      |> Map.keys()
-      |> get_bounds()
-
+    {_.._, _..max_y} = map |> Map.keys() |> get_bounds()
     map = Map.put(map, :void_y, max_y)
-
-    0
-    |> Stream.iterate(&(&1 + 1))
-    |> Enum.reduce_while(map, &drop_sand/2)
+    0 |> Stream.iterate(&(&1 + 1)) |> Enum.reduce_while(map, &drop_sand/2)
   end
 
   @impl Day
   def b(map) do
-    {_.._, _..max_y} =
-      map
-      |> Map.keys()
-      |> get_bounds()
-
+    {_.._, _..max_y} = map |> Map.keys() |> get_bounds()
     map = Map.put(map, :floor, max_y + 2)
-
-    0
-    |> Stream.iterate(&(&1 + 1))
-    |> Enum.reduce_while(map, &drop_sand/2)
+    0 |> Stream.iterate(&(&1 + 1)) |> Enum.reduce_while(map, &drop_sand/2)
   end
 
   @impl Day
   def parse_input() do
     with {:ok, file} <- Day.load(__MODULE__) do
-      file
-      |> String.split("\n", trim: true)
-      |> init_map()
+      file |> String.split("\n", trim: true) |> init_map()
     end
   end
 
   def parse_line(line) do
-    line
-    |> String.split(~r/\D+/)
-    |> Enum.map(&String.to_integer/1)
-    |> Enum.chunk_every(2)
+    line |> String.split(~r/\D+/) |> Enum.map(&String.to_integer/1) |> Enum.chunk_every(2)
   end
 
   def init_map(lines, map \\ %{})
@@ -61,19 +42,13 @@ defmodule Aoc.Day14 do
   end
 
   def init_map([line | lines], map) do
-    map =
-      line
-      |> parse_line()
-      |> draw_lines(map)
+    map = line |> parse_line() |> draw_lines(map)
 
     init_map(lines, map)
   end
 
   def draw_lines([[xa, ya] | [[xb, yb] | _] = lines], map) do
-    new_line =
-      make_line(xa, ya, xb, yb)
-      |> Enum.map(&{&1, "#"})
-      |> Map.new()
+    new_line = make_line(xa, ya, xb, yb) |> Enum.map(&{&1, "#"}) |> Map.new()
 
     draw_lines(lines, Map.merge(map, new_line))
   end
@@ -83,19 +58,11 @@ defmodule Aoc.Day14 do
   end
 
   def make_line(x, ya, x, yb) do
-    ya..yb
-    |> Enum.map(&{x, &1})
+    Enum.map(ya..yb, &{x, &1})
   end
 
   def make_line(xa, y, xb, y) do
-    xa..xb
-    |> Enum.map(&{&1, y})
-  end
-
-  def draw_line(y, range_x, map) do
-    range_x
-    |> Enum.map(fn x -> Map.get(map, {x, y}, ".") end)
-    |> Enum.join()
+    Enum.map(xa..xb, &{&1, y})
   end
 
   def get_bounds(coords) do
@@ -115,11 +82,11 @@ defmodule Aoc.Day14 do
       pos
       |> drop_possibilities()
       |> Enum.map(&{&1, get_block(map, &1)})
+      |> Enum.filter(&is_nil(elem(&1, 1)))
+      |> List.first()
       |> case do
-        [{new_pos, nil} | _] -> do_drop_sand(new_pos, map)
-        [_, {new_pos, nil}, _] -> do_drop_sand(new_pos, map)
-        [_, _, {new_pos, nil}] -> do_drop_sand(new_pos, map)
-        _ -> Map.put(map, pos, "o")
+        {new_pos, nil} -> do_drop_sand(new_pos, map)
+        nil -> Map.put(map, pos, "o")
       end
     else
       :done
