@@ -5,6 +5,7 @@ defmodule Aoc.Day12 do
   @behaviour Aoc.Day
 
   alias Aoc.Day
+  alias Aoc.Utilities.Grid
 
   @impl Day
   def day(), do: 12
@@ -30,11 +31,7 @@ defmodule Aoc.Day12 do
   end
 
   def do_parse_input(input) do
-    input
-    |> String.to_charlist()
-    |> Enum.reduce({{0, 0}, %{}}, &map_grid/2)
-    |> elem(1)
-    |> Map.new()
+    Grid.new(input, fn: &get_energy_level/1)
   end
 
   def map_grid(?\n, {{x, y} = pos, map}) do
@@ -110,4 +107,8 @@ defmodule Aoc.Day12 do
       {x, y + 1}
     ]
   end
+
+  def get_energy_level("S"), do: 0
+  def get_energy_level("E"), do: 27
+  def get_energy_level(<<c>>), do: c - 96
 end
